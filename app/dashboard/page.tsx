@@ -4,14 +4,22 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
-
+import { BarChart2, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import AnalysisOptions from "./components/AnalysisOptions";
 import InitialView from "./components/InitialView";
 import ProblemCard from "./components/ProblemCard";
 import ResultsHeader from "./components/ResultsHeader";
 import Chatbot from "./components/Chatbot";
 import type { ProblemItem, OptimizationResult } from "./types";
+import PerformanceSummaryGraph from "./components/PerformanceSummaryGraph";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -28,6 +36,8 @@ export default function DashboardPage() {
   >(null);
   const activeProblemForChat =
     activeChatProblemIndex !== null ? problems[activeChatProblemIndex] : null;
+
+  const hasOptimizedProblems = problems.some((p) => p.status === "optimized");
 
   useEffect(() => {
     try {
@@ -177,7 +187,28 @@ export default function DashboardPage() {
     if (analysisSource && problems.length > 0) {
       return (
         <div className="w-full max-w-5xl space-y-6">
-          <ResultsHeader source={analysisSource} count={problems.length} />
+          <div className="flex justify-between items-center">
+            {/* The ResultsHeader component */}
+            <ResultsHeader source={analysisSource} count={problems.length} />
+
+            {hasOptimizedProblems && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BarChart2 className="mr-2 h-4 w-4" />
+                    View Performance Summary
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent className="max-w-4xl">
+                  <DialogHeader>
+                    <DialogTitle>Optimization Performance Summary</DialogTitle>
+                  </DialogHeader>
+                  <PerformanceSummaryGraph problems={problems} />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
           {problems.map((item, index) => (
             <ProblemCard
               key={index}
