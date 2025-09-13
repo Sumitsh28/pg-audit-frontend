@@ -1,5 +1,3 @@
-// app/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -22,11 +20,9 @@ export default function HomePage() {
 
     setIsConnecting(true);
 
-    // Save URIs to session storage so the dashboard page can access them
     sessionStorage.setItem("dbUri", JSON.stringify(dbUri));
     sessionStorage.setItem("writeDbUri", JSON.stringify(writeDbUri));
 
-    // Redirect to the dashboard
     router.push("/dashboard");
   };
 

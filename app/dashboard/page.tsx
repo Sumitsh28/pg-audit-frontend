@@ -1,5 +1,3 @@
-// app/dashboard/page.tsx
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -12,11 +10,12 @@ import AnalysisOptions from "./components/AnalysisOptions";
 import InitialView from "./components/InitialView";
 import ProblemCard from "./components/ProblemCard";
 import ResultsHeader from "./components/ResultsHeader";
+import Chatbot from "./components/Chatbot";
 import type { ProblemItem, OptimizationResult } from "./types";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [isReady, setIsReady] = useState(false); // Controls rendering until session is verified
+  const [isReady, setIsReady] = useState(false);
 
   const [analysisSource, setAnalysisSource] = useState<string | null>(null);
   const [problems, setProblems] = useState<ProblemItem[]>([]);
@@ -24,18 +23,22 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // On page load, verify that a DB URI exists in session storage.
-  // If not, redirect back to the home page to connect.
+  const [activeChatProblemIndex, setActiveChatProblemIndex] = useState<
+    number | null
+  >(null);
+  const activeProblemForChat =
+    activeChatProblemIndex !== null ? problems[activeChatProblemIndex] : null;
+
   useEffect(() => {
     try {
       const savedUri = sessionStorage.getItem("dbUri");
       if (!savedUri || JSON.parse(savedUri) === "") {
-        router.replace("/"); // Redirect if no URI
+        router.replace("/");
       } else {
-        setIsReady(true); // URI exists, allow component to render
+        setIsReady(true);
       }
     } catch (e) {
-      router.replace("/"); // Redirect on any error
+      router.replace("/");
     }
   }, [router]);
 
@@ -43,7 +46,6 @@ export default function DashboardPage() {
     mode: "auto" | "benchmark" | "file",
     fileContent: string | null = null
   ) => {
-    // ... this function is unchanged from before
     setIsLoading(true);
     setError(null);
     setProblems([]);
@@ -66,7 +68,6 @@ export default function DashboardPage() {
   };
 
   const handleOptimize = async (problemIndex: number) => {
-    // ... this function is unchanged from before
     const items = [...problems];
     const item = items[problemIndex];
     if (item.status !== "idle") return;
@@ -99,7 +100,6 @@ export default function DashboardPage() {
   };
 
   const handleApply = async (ddl: string) => {
-    // ... this function is unchanged from before
     if (
       !confirm(
         "This will execute a DDL statement on your database. Are you sure?"
@@ -125,7 +125,6 @@ export default function DashboardPage() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // ... this function is unchanged from before
     const file = event.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -134,9 +133,6 @@ export default function DashboardPage() {
     event.target.value = "";
   };
 
-  // --- RENDER LOGIC ---
-
-  // Don't render anything until the session check is complete
   if (!isReady) {
     return null;
   }
@@ -158,25 +154,7 @@ export default function DashboardPage() {
         </Alert>
       );
     }
-    if (!analysisSource) {
-      return (
-        <>
-          <AnalysisOptions
-            isLoading={isLoading}
-            onPgStats={() => startAnalysis("auto")}
-            onBenchmark={() => startAnalysis("benchmark")}
-            onFileUpload={() => fileInputRef.current?.click()}
-          />
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".txt,.sql"
-            className="hidden"
-          />
-        </>
-      );
-    }
+
     if (analysisSource === "empty") {
       return (
         <>
@@ -195,24 +173,52 @@ export default function DashboardPage() {
         </>
       );
     }
+
+    if (analysisSource && problems.length > 0) {
+      return (
+        <div className="w-full max-w-5xl space-y-6">
+          <ResultsHeader source={analysisSource} count={problems.length} />
+          {problems.map((item, index) => (
+            <ProblemCard
+              key={index}
+              item={item}
+              onOptimize={() => handleOptimize(index)}
+              onApply={handleApply}
+              onAskAI={() => setActiveChatProblemIndex(index)}
+            />
+          ))}
+        </div>
+      );
+    }
+
     return (
-      <div className="w-full max-w-5xl space-y-6">
-        <ResultsHeader source={analysisSource} count={problems.length} />
-        {problems.map((item, index) => (
-          <ProblemCard
-            key={index}
-            item={item}
-            onOptimize={() => handleOptimize(index)}
-            onApply={handleApply}
-          />
-        ))}
-      </div>
+      <>
+        <AnalysisOptions
+          isLoading={isLoading}
+          onPgStats={() => startAnalysis("auto")}
+          onBenchmark={() => startAnalysis("benchmark")}
+          onFileUpload={() => fileInputRef.current?.click()}
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".txt,.sql"
+          className="hidden"
+        />
+      </>
     );
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
       {renderContent()}
+      {activeProblemForChat && (
+        <Chatbot
+          problem={activeProblemForChat}
+          onClose={() => setActiveChatProblemIndex(null)}
+        />
+      )}
     </main>
   );
 }

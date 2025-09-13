@@ -1,5 +1,3 @@
-// components/dashboard/ResultsHeader.tsx
-
 "use client";
 
 import { FileText, History, Wand2 } from "lucide-react";

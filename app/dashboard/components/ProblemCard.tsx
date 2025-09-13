@@ -1,23 +1,29 @@
-// components/dashboard/ProblemCard.tsx
-
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Sparkles, Wand2, ShieldCheck } from "lucide-react";
+import {
+  Loader2,
+  Sparkles,
+  Wand2,
+  ShieldCheck,
+  MessageSquarePlus,
+} from "lucide-react";
 import type { ProblemItem } from "../types";
 
 interface ProblemCardProps {
   item: ProblemItem;
   onOptimize: () => void;
   onApply: (ddl: string) => void;
+  onAskAI: () => void;
 }
 
 export default function ProblemCard({
   item,
   onOptimize,
   onApply,
+  onAskAI,
 }: ProblemCardProps) {
   const { query, execution_time_ms, calls, error, status, optimizationResult } =
     item;
@@ -34,16 +40,22 @@ export default function ProblemCard({
           <div className="font-mono text-sm text-secondary-foreground flex-grow">
             {query}
           </div>
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex items-center gap-2">
             {status === "idle" && (
-              <Button onClick={onOptimize}>
+              <Button onClick={onOptimize} size="sm">
                 <Sparkles className="mr-2 h-4 w-4" /> Optimize
               </Button>
             )}
             {status === "optimizing" && (
-              <div className="flex items-center gap-2 text-sm font-semibold">
+              <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" /> Optimizing...
               </div>
+            )}
+
+            {status !== "optimizing" && (
+              <Button variant="outline" size="sm" onClick={onAskAI}>
+                <MessageSquarePlus className="mr-2 h-4 w-4" /> Ask AI
+              </Button>
             )}
           </div>
         </div>
@@ -60,7 +72,7 @@ export default function ProblemCard({
             <p>
               Execution time:{" "}
               <strong className="text-amber-500">
-                {execution_time_ms.toFixed(2)} ms
+                {execution_time_ms?.toFixed(2)} ms
               </strong>
             </p>
           )}
@@ -82,7 +94,6 @@ export default function ProblemCard({
               <div>
                 <h4 className="text-sm font-semibold mb-2">Suggested Code:</h4>
                 <div className="p-2 rounded-md bg-slate-950 font-mono text-xs">
-                  {/* Using <pre> for better formatting */}
                   <pre>
                     <code>
                       {optimizationResult.ai_suggestion.rewritten_query ||
