@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { DotPattern } from "@/components/magicui/dot-pattern";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -24,9 +25,7 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <main className="flex flex-col items-center p-4 md:p-24">
-          {children}
-        </main>
+        <main className="flex flex-col items-center">{children}</main>
       </body>
     </html>
   );

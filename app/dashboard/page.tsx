@@ -240,7 +240,7 @@ export default function DashboardPage() {
       <>
         <AnalysisOptions
           isLoading={isLoading}
-          onPgStats={() => startAnalysis("auto")}
+          onAutoAnalyze={() => startAnalysis("auto")}
           onBenchmark={() => startAnalysis("benchmark")}
           onFileUpload={() => fileInputRef.current?.click()}
         />

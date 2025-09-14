@@ -10,16 +10,17 @@ import {
 } from "@/components/ui/card";
 import { History, Wand2, Upload } from "lucide-react";
 
+// 1. RENAME PROP
 interface AnalysisOptionsProps {
   isLoading: boolean;
-  onPgStats: () => void;
+  onAutoAnalyze: () => void;
   onBenchmark: () => void;
   onFileUpload: () => void;
 }
 
 export default function AnalysisOptions({
   isLoading,
-  onPgStats,
+  onAutoAnalyze, // <-- USE RENAMED PROP
   onBenchmark,
   onFileUpload,
 }: AnalysisOptionsProps) {
@@ -33,15 +34,16 @@ export default function AnalysisOptions({
       </CardHeader>
       <CardContent className="grid md:grid-cols-3 gap-4">
         <Button
-          onClick={onPgStats}
+          onClick={onAutoAnalyze} // <-- USE RENAMED PROP
           disabled={isLoading}
           variant="secondary"
           className="h-24 flex-col gap-2"
         >
+          {/* 2. UPDATE BUTTON TEXT */}
           <History className="h-6 w-6" />
-          <span>From Query History</span>
+          <span>Automatic Analysis</span>
           <span className="text-xs text-muted-foreground">
-            (pg_stat_statements)
+            (Finds Slow Queries)
           </span>
         </Button>
         <Button

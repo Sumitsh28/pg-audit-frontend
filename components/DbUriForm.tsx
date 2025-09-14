@@ -12,9 +12,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // <-- IMPORT NEW COMPONENTS
 import { Loader2 } from "lucide-react";
 
+// UPDATE PROPS INTERFACE
 interface DbUriFormProps {
+  dbType: "postgresql" | "mysql";
+  setDbType: (type: "postgresql" | "mysql") => void;
   readUri: string;
   setReadUri: (uri: string) => void;
   writeUri: string;
@@ -25,6 +35,8 @@ interface DbUriFormProps {
 }
 
 export default function DbUriForm({
+  dbType,
+  setDbType,
   readUri,
   setReadUri,
   writeUri,
@@ -33,6 +45,12 @@ export default function DbUriForm({
   isConnecting,
   error,
 }: DbUriFormProps) {
+  // ADD DYNAMIC PLACEHOLDER
+  const placeholder =
+    dbType === "postgresql"
+      ? "postgresql://user:password@host:port/dbname"
+      : "mysql+mysqlconnector://user:password@host:port/dbname";
+
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>
@@ -43,11 +61,29 @@ export default function DbUriForm({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {/* ADD DATABASE TYPE SELECTOR */}
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="db-type">Database Type</Label>
+            <Select
+              value={dbType}
+              onValueChange={(value: "postgresql" | "mysql") =>
+                setDbType(value)
+              }
+            >
+              <SelectTrigger id="db-type">
+                <SelectValue placeholder="Select database type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                <SelectItem value="mysql">MySQL</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="read-uri">Read-Only URI</Label>
             <Input
               id="read-uri"
-              placeholder="postgresql://user:password@host:port/dbname"
+              placeholder={placeholder} // <-- USE DYNAMIC PLACEHOLDER
               value={readUri}
               onChange={(e) => setReadUri(e.target.value)}
               onKeyDown={(e) => {
@@ -62,7 +98,7 @@ export default function DbUriForm({
             <Label htmlFor="write-uri">Write URI (Optional)</Label>
             <Input
               id="write-uri"
-              placeholder="Same as above, with write permissions"
+              placeholder={placeholder} // <-- USE DYNAMIC PLACEHOLDER
               value={writeUri}
               onChange={(e) => setWriteUri(e.target.value)}
               onKeyDown={(e) => {

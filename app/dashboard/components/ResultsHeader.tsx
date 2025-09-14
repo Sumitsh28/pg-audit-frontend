@@ -9,9 +9,15 @@ interface ResultsHeaderProps {
 
 export default function ResultsHeader({ source, count }: ResultsHeaderProps) {
   const titles = {
+    // THIS ENTRY IS FOR POSTGRESQL
     pg_stat_statements: {
       icon: <History className="mr-2 h-6 w-6" />,
       text: "Analysis from Query History",
+    },
+    // ADD THIS NEW ENTRY FOR MYSQL
+    "Performance Schema": {
+      icon: <History className="mr-2 h-6 w-6" />,
+      text: "Analysis from MySQL Performance Schema",
     },
     automated_benchmark: {
       icon: <Wand2 className="mr-2 h-6 w-6" />,
@@ -24,8 +30,8 @@ export default function ResultsHeader({ source, count }: ResultsHeaderProps) {
   };
 
   const current = titles[source as keyof typeof titles] || {
-    icon: null,
-    text: "Analysis Results",
+    icon: <History className="mr-2 h-6 w-6" />, // Add a default icon
+    text: source ? `Analysis from ${source}` : "Analysis Results",
   };
 
   return (
