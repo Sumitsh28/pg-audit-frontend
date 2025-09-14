@@ -27,6 +27,10 @@ const eslintConfig = [
       ],
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/prefer-ts-expect-error": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
     },
   },
 ];
