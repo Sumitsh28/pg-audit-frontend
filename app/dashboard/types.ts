@@ -35,3 +35,10 @@ export interface ProblemItem extends Problem {
   status: "idle" | "optimizing" | "optimized" | "error";
   optimizationResult?: OptimizationResult;
 }
+
+export interface SandboxResult {
+  match: boolean;
+  original_query_results: Record<string, any>[];
+  optimized_query_results: Record<string, any>[];
+  error?: string | null;
+}

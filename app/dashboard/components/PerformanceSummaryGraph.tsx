@@ -75,7 +75,7 @@ export default function PerformanceSummaryGraph({ problems }: GraphProps) {
 
   if (validChartData.length === 0) {
     return (
-      <Card className="w-full">
+      <Card className="w-auto">
         <CardHeader>
           <CardTitle>Optimization Performance Summary</CardTitle>
         </CardHeader>
@@ -89,7 +89,7 @@ export default function PerformanceSummaryGraph({ problems }: GraphProps) {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-auto">
       <CardHeader>
         <CardTitle>Optimization Performance Summary</CardTitle>
         <CardDescription>

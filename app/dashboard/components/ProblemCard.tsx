@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   MessageSquarePlus,
   IndianRupee,
-  ChevronDown, // Import ChevronDown
+  ChevronDown,
+  FlaskConical,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import type { ProblemItem } from "../types";
@@ -30,6 +31,7 @@ interface ProblemCardProps {
   onOptimize: () => void;
   onApply: (ddl: string) => void;
   onAskAI: () => void;
+  onSandbox: () => void;
 }
 
 export default function ProblemCard({
@@ -37,6 +39,7 @@ export default function ProblemCard({
   onOptimize,
   onApply,
   onAskAI,
+  onSandbox,
 }: ProblemCardProps) {
   const { query, execution_time_ms, calls, error, status, optimizationResult } =
     item;
@@ -136,7 +139,12 @@ export default function ProblemCard({
 
             {status === "optimized" && optimizationResult && (
               <div className="space-y-4 pt-4 border-t">
-                <h3 className="font-semibold text-lg">AI Suggestion</h3>
+                <div className="flex flex-row justify-between items-center">
+                  <h3 className="font-semibold text-lg">AI Suggestion</h3>
+                  <Button variant="outline" size="sm" onClick={onSandbox}>
+                    <FlaskConical className="mr-2 h-4 w-4" /> Run on Sandbox
+                  </Button>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {optimizationResult.ai_suggestion.explanation}
                 </p>

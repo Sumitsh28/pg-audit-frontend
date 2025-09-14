@@ -20,6 +20,7 @@ import ResultsHeader from "./components/ResultsHeader";
 import Chatbot from "./components/Chatbot";
 import type { ProblemItem, OptimizationResult } from "./types";
 import PerformanceSummaryGraph from "./components/PerformanceSummaryGraph";
+import SandboxModal from "./components/SandboxModal";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -34,6 +35,16 @@ export default function DashboardPage() {
   const [activeChatProblemIndex, setActiveChatProblemIndex] = useState<
     number | null
   >(null);
+
+  const [activeSandboxProblemIndex, setActiveSandboxProblemIndex] = useState<
+    number | null
+  >(null);
+
+  const activeProblemForSandbox =
+    activeSandboxProblemIndex !== null
+      ? problems[activeSandboxProblemIndex]
+      : null;
+
   const activeProblemForChat =
     activeChatProblemIndex !== null ? problems[activeChatProblemIndex] : null;
 
@@ -218,6 +229,7 @@ export default function DashboardPage() {
               onOptimize={() => handleOptimize(index)}
               onApply={handleApply}
               onAskAI={() => setActiveChatProblemIndex(index)}
+              onSandbox={() => setActiveSandboxProblemIndex(index)}
             />
           ))}
         </div>
@@ -250,6 +262,18 @@ export default function DashboardPage() {
         <Chatbot
           problem={activeProblemForChat}
           onClose={() => setActiveChatProblemIndex(null)}
+        />
+      )}
+
+      {activeProblemForSandbox && (
+        <SandboxModal
+          isOpen={true}
+          onClose={() => setActiveSandboxProblemIndex(null)}
+          originalQuery={activeProblemForSandbox.query}
+          optimizedQuery={
+            activeProblemForSandbox.optimizationResult?.ai_suggestion
+              .rewritten_query || null
+          }
         />
       )}
     </main>
