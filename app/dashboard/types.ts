@@ -8,16 +8,26 @@ export interface Problem {
   error?: string;
 }
 
+export interface ProviderCostSavings {
+  provider_name: string;
+  potential_savings_inr_per_call: number;
+}
+
+export interface CostSlayerInfo {
+  potential_savings: ProviderCostSavings[];
+}
+
 export interface OptimizationResult {
   ai_suggestion: {
     rewritten_query: string | null;
     new_index_suggestion: string | null;
     explanation: string;
+    // ADDED: New data scan estimates from the AI
+    estimated_data_scanned_before_mb?: number | null;
+    estimated_data_scanned_after_mb?: number | null;
   };
-  cost_slayer: {
-    cost_before: number;
-    cost_after: number;
-  };
+  // UPDATED: Use the new CostSlayerInfo type
+  cost_slayer: CostSlayerInfo;
   estimated_execution_time_after_ms?: number;
 }
 

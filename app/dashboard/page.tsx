@@ -92,6 +92,8 @@ export default function DashboardPage() {
           query: item.query,
           execution_time_ms: item.execution_time_ms,
           query_plan_before: item.query_plan_before,
+          // ADD THIS LINE:
+          calls: item.calls,
         }
       );
       setProblems((currentProblems) => {
