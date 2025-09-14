@@ -121,8 +121,8 @@ export default function Chatbot({ problem, onClose }: ChatbotProps) {
           </Button>
         </div>
 
-        <ScrollArea className="flex-1 min-h-0" viewportRef={scrollViewport}>
-          <div className="p-4 space-y-6">
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-4 space-y-6" ref={scrollViewport}>
             <div className="flex items-start gap-3">
               <div className="p-2 bg-primary rounded-full text-primary-foreground">
                 <Bot className="h-4 w-4" />

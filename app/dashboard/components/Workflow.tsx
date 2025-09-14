@@ -51,17 +51,17 @@ export function Workflow({ className }: { className?: string }) {
             </span>
           </Circle>
           <Circle ref={div2Ref} className="w-24 h-24 p-4">
-            <span className="text-center text-xs font-bold text-black ">
+            <span className="text-center text-sm font-bold text-black ">
               Complex queries
             </span>
           </Circle>
           <Circle ref={div3Ref} className="w-24 h-24 p-4">
-            <span className="text-center text-xs font-bold text-black">
+            <span className="text-center text-sm font-bold text-black">
               Unoptimised Queries
             </span>
           </Circle>
           <Circle ref={div4Ref} className="w-24 h-24 p-4">
-            <span className="text-center text-xs font-bold text-black">
+            <span className="text-center text-sm font-bold text-black">
               Manual diagnosis
             </span>
           </Circle>

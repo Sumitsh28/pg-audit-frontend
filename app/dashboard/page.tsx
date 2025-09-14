@@ -213,7 +213,7 @@ export default function DashboardPage() {
                   </Button>
                 </DialogTrigger>
 
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="h-auto max-h-[90vh] w-full max-w-3xl overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Optimization Performance Summary</DialogTitle>
                   </DialogHeader>
